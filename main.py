@@ -1,5 +1,7 @@
 from tkinter import *
 # ---------------------------- CONSTANTS ------------------------------- #
+from tkinter import ttk
+
 PINK = "#eec4c4"
 RED = "#f14668"
 GREEN = "#98ddca"
@@ -56,6 +58,10 @@ window = Tk()
 window.title('Pomodoro')
 window.config(padx=100, pady=50, bg=BG)
 
+s = ttk.Style(window)
+s.theme_use('clam')
+s.configure('flat.TButton', borderwidth=0, background=BG, padding=0)
+
 canvas = Canvas(width=200, height=224, bg=BG, highlightthickness=0)
 image = PhotoImage(file='tomato.png')
 canvas.create_image(100, 112, image=image)
@@ -67,8 +73,10 @@ check = Label(text='', font=(FONT_NAME, 30, 'normal'), bg=BG, fg=GREEN)
 title.grid(row=0, column=1)
 check.grid(row=3, column=1)
 
-start_btn = Button(text='Start', highlightthickness=0, command=start_timer)
-reset_btn = Button(text='Reset', highlightthickness=0, command=reset_timer)
+start_image = PhotoImage(file='button_start.png')
+reset_image = PhotoImage(file='button_reset.png')
+start_btn = ttk.Button(window, command=start_timer, image=start_image, style='flat.TButton')
+reset_btn = ttk.Button(window, command=reset_timer, image=reset_image, style='flat.TButton')
 start_btn.grid(row=2, column=0)
 reset_btn.grid(row=2, column=2)
 
