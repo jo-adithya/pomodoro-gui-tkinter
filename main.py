@@ -1,27 +1,45 @@
 from tkinter import *
 # ---------------------------- CONSTANTS ------------------------------- #
 PINK = "#eec4c4"
-RED = "#ffaaa7"
+RED = "#f14668"
 GREEN = "#98ddca"
 BG = "#f7f3e9"
 FONT_NAME = "Courier"
-WORK_MIN = 25
-SHORT_BREAK_MIN = 5
-LONG_BREAK_MIN = 20
+WORK_SEC = 25 * 60
+SHORT_BREAK_SEC = 5 * 60
+LONG_BREAK_SEC = 20 * 60
+REPS = 0
+TIMER = None
 
 # ---------------------------- TIMER RESET ------------------------------- #
 
 # ---------------------------- TIMER MECHANISM ------------------------------- #
 def start_timer():
-    countdown(300)
+    global REPS
+    REPS += 1
+
+    if REPS == 8:
+        title.config(fg=RED, text='Break')
+        countdown(LONG_BREAK_SEC)
+        REPS = 0
+    elif REPS % 2 == 0:
+        title.config(fg=PINK, text='Break')
+        countdown(SHORT_BREAK_SEC)
+    else:
+        title.config(fg=GREEN, text='Work')
+        countdown(WORK_SEC)
 
 # ---------------------------- COUNTDOWN MECHANISM ------------------------------- #
 def countdown(count):
     minutes = count // 60
     seconds = count % 60
     canvas.itemconfig(timer, text=f'{str(minutes).zfill(2)}:{str(seconds).zfill(2)}')
-    if count > 0:
-        window.after(1000, countdown, count - 1)
+    if count >= 0:
+        global TIMER
+        TIMER = window.after(1000, countdown, count - 1)
+    else:
+        check.config(text='✔︎'*(REPS // 2))
+        start_timer()
 
 # ---------------------------- UI SETUP ------------------------------- #
 window = Tk()
@@ -35,7 +53,7 @@ timer = canvas.create_text(100, 133, text='00:00', fill='white', font=(FONT_NAME
 canvas.grid(row=1, column=1)
 
 title = Label(text='Timer', font=(FONT_NAME, 50, 'normal'), bg=BG, fg=GREEN)
-check = Label(text='✔︎', font=(FONT_NAME, 20, 'normal'), bg=BG, fg=GREEN)
+check = Label(text='', font=(FONT_NAME, 30, 'normal'), bg=BG, fg=GREEN)
 title.grid(row=0, column=1)
 check.grid(row=3, column=1)
 
